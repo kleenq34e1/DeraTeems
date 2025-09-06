@@ -234,10 +234,10 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(async (cache) => {
       await cache.addAll([
-        "/Obmen/izbran.html",
-        "/Obmen/index.html",
-        "/Obmen/cash.html",
-        "/Obmen/script.js",
+        "/DeraTeems/izbran.html",
+        "/DeraTeems/index.html",
+        "/DeraTeems/cash.html",
+        "/DeraTeems/script.js",
       ]);
       await cacheUrlsSequentially(cache, urlsToCache.filter(url => !url.startsWith('/Obmen/')));
     }).then(() => {
