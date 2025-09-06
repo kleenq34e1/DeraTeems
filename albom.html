@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Альбомы</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #363E6B;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+      min-height: 100vh;
+      color: #fff;
+      user-select: none;
+    }
+    
+    .album-title {
+      background-color: #6570af;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 10px;
+       margin-bottom: 10px;
+    }
+
+    #playlist-container {
+      background: #fff;
+      border-radius: 24px;
+      padding: 30px 30px 40px;
+      max-width: 620px;
+      width: 100%;
+      box-shadow: 0 12px 30px rgba(54, 62, 107, 0.3);
+      display: flex;
+      flex-direction: column;
+      color: #fff;
+      user-select: none;
+    }
+
+    #playlist-container h3 {
+      margin: 0 0 24px 10px;
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: 0.05em;
+      color: #fff;
+      text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+    }
+
+
+    .small-button {
+      align-self: flex-start;
+      margin-bottom: 20px;
+      background: #fff;
+      color: #363E6B;
+      border: 2.5px solid #363E6B;
+      border-radius: 16px;
+      padding: 10px 24px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 5px 18px rgba(54, 62, 107, 0.25);
+      transition: box-shadow 0.3s ease, transform 0.2s ease, color 0.3s ease, border-color 0.3s ease;
+      user-select: none;
+    }
+
+    .small-button:hover {
+      box-shadow: 0 9px 28px rgba(54, 62, 107, 0.5);
+      transform: translateY(-3px);
+      color: #2a3150;
+      border-color: #2a3150;
+    }
+
+    .small-button:active {
+      transform: translateY(0);
+      box-shadow: 0 5px 18px rgba(54, 62, 107, 0.25);
+    }
+
+    #buttons-container {
+      overflow-y: auto;
+      max-height: 430px;
+      padding-right: 6px;
+      margin-bottom: 20px;
+      user-select: none;
+    }
+
+    .track-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+
+
+    .add-btn {
+      flex-shrink: 0;
+      background: linear-gradient(45deg, #1c6d4b, #419974);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1.7rem;
+      line-height: 1;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 5px 14px #1c6d4b;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    }
+
+    .add-btn:hover {
+      box-shadow: 0 8px 22px #1c6d4b;
+      transform: scale(1.1);
+    }
+
+    .add-btn:active {
+      transform: scale(0.95);
+      box-shadow: 0 5px 14px #1c6d4b;
+    }
+
+
+
+
+
+
+
+
+
+    .add-btn-albom {
+      flex-shrink: 0;
+      background: linear-gradient(45deg, #ffffff, #ffffff);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 1.4rem;
+      line-height: 1;
+      color: rgb(34, 34, 34);
+      font-weight: 700;
+      cursor: pointer;
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    }
+
+    .add-btn-albom:hover {
+      transform: scale(1.1);
+    }
+
+    .add-btn-albom:active {
+      transform: scale(0.95);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    .local-track-button {
+      flex-grow: 1;
+      background: #363E6B;
+      border: none;
+      border-radius: 16px;
+      padding: 12px 22px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 5px 18px rgba(54, 62, 107, 0.7);
+      transition: box-shadow 0.3s ease, transform 0.2s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      user-select: none;
+      outline: none;
+    }
+
+    .local-track-button:hover:not(:disabled) {
+      box-shadow: 0 9px 28px rgba(54, 62, 107, 1);
+      transform: translateY(-3px);
+    }
+
+    .local-track-button:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 5px 18px rgba(54, 62, 107, 0.7);
+    }
+
+    .local-track-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+      background: #999;
+      color: #ccc;
+    }
+
+    #audio-player {
+      width: 100%;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(54, 62, 107, 0.3);
+      outline: none;
+      background-color: #fff;
+      height: 46px;
+      user-select: none;
+    }
+
+    #buttons-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #buttons-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    #buttons-container::-webkit-scrollbar-thumb {
+      background: #363E6B;
+      border-radius: 8px;
+    }
+
+    .searchL {
+  margin-bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.searchL input[type="text"] {
+  width: 100%;
+  max-width: 600px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 2.5px solid #6570af;
+  border-radius: 16px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #363E6B;
+  box-sizing: border-box;
+}
+
+.searchL input[type="text"]::placeholder {
+  color: #999;
+}
+
+.searchL input[type="text"]:focus {
+  border-color: #4a5d9e;
+  box-shadow: 0 0 8px rgba(74, 93, 158, 0.6);
+}
+
+.highlight {
+    background-color: rgba(66, 153, 99, 0.7); 
+    border-left: 5px solid #2d4e2d; 
+    border-radius: 10px;
+    transition: background-color 0.5s ease, transform 0.5s ease; 
+    padding: 10px; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+}
+
+.fade-out {
+    opacity: 0; 
+    transform: scale(0.95); 
+    transition: opacity 0.5s ease, transform 0.5s ease; 
+}
+
+
+
+
+
+    @media (max-width: 640px) {
+      #playlist-container {
+        padding: 25px 20px 30px;
+      }
+
+      #playlist-container h3 {
+        font-size: 1.6rem;
+      }
+
+      .track-row {
+        gap: 10px;
+      }
+
+      .add-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1.5rem;
+      }
+      .add-btn-albom {
+        width: 32px;
+        height: 32px;
+        font-size: 1.3rem;
+      }
+
+      .album-title {
+      background-color: #6570af;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 10px;
+       margin-bottom: 10px;
+
+    }
+
+      .local-track-button {
+        font-size: 0.9rem;
+        padding: 10px 16px;
+      }
+
+      #audio-player {
+        height: 40px;
+      }
+      
+    }
+  </style>
+</head>
+
+<body>
+  <section id="playlist-container" aria-label="Плейлист треков">
+    <h3>Альбомы</h3>
+    <form action="search" method="get" class="searchL">  
+    <input type="text" name="query" placeholder="Поиск песен...">   
+    </form>  
+    <button class="small-button" onclick="location.href='cash.html'" aria-label="Перейти в меню">Меню</button>
+    <div id="buttons-container" tabindex="0" aria-live="polite" aria-relevant="additions"></div>
+    <audio id="audio-player" controls preload="none" controlsList="nodownload" aria-label="Аудиоплеер для треков"></audio>
+  </section>
+
+  <script>
+    const tracks = [
+      {
+      title: '1 ТГК МУЗ-ЧАТ',
+      album: [
+          { title: 'Городской маршрут', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/Русская%20душа%20-%20Городской%20маршрут.mp3' },
+          { title: 'Неважно', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/tagmp3_2.-Русская-душа---Неважно.mp3' },
+          { title: 'Здесь лапы у ели', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/tagmp3_3.-Русская-душа---Здесь-лапы-у-ели.mp3' },
+          { title: 'Булгаков', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/tagmp3_4.-Русская-душа---Булгаков.mp3' },
+          { title: 'В чем сила, брат', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/5.%20Русская%20душа%20-%20В%20чем%20сила,%20брат.mp3' },
+          { title: 'Дерзкий вечер', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/tagmp3_6.-Русская-душа---Дерзкий-вечер.mp3' },
+          { title: 'Пушкин', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/tagmp3_7.-Русская-душа---Пушкин.mp3' },
+          { title: 'Санкции', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/tagmp3_8_Русская-душа_Новости_смотрю_и_плачу.mp3' },
+          { title: 'Здeсь лaпы у eли', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/tagmp3_9.-Русская-душа---Здесь-лапы-у-ели.mp3' },
+        ]
+      },
+      {
+      title: '2 ТГК МУЗ-ЧАТ',
+      album: [
+        { title: 'Очень', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/2.%20Русская%20душа%20-%20Очень.wav--online-audio-convert.com%20(1).mp3' },
+        { title: 'Воронье', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/воронье.mp3' },
+        { title: 'Тишина', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/тишина.mp3' },
+        { title: 'Туман', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/5.%20Русская%20душа%20-%20Туман.wav--online-audio-convert.com.mp3' },
+        { title: 'Дети 20-го века', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/6.%20Русская%20душа%20-%20Дети%2020-го%20века.wav--online-audio-convert.com.mp3' },
+        { title: 'Застава', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/7.%20Русская%20душа%20-%20Застава.wav--online-audio-convert.com.mp3' },
+        { title: 'Великая держава', url: 'https://nextjs-boilerplate-lemon-pi-53.vercel.app/Русская душа - Великая держава.mp3' },
+      ]
+      },
+      {
+      title: '3 ТГК МУЗ-ЧАТ',
+      album: [
+        { title: 'Гафт', url: 'https://nextjs-boil-delta.vercel.app/гафт.mp3' },
+        { title: 'Читаю строки ветхого завета', url: 'https://nextjs-boil-delta.vercel.app/Читаю-строки-ветхого-завета_.mp3' },
+        { title: 'Женщина до утра', url: 'https://nextjs-boil-delta.vercel.app/женщина%20до%20утра.mp3' },
+        { title: 'Одесса', url: 'https://nextjs-boil-delta.vercel.app/4.%20Русская%20душа%20-%20Одесса%20(1).mp3' },
+        { title: 'Трепещет сердце от безумства', url: 'https://nextjs-boil-delta.vercel.app/5_Русская_душа_Трепещет_сердце_от_безумства.mp3' },
+        { title: 'Мой город', url: 'https://nextjs-boil-delta.vercel.app/мой-город.mp3' },
+        { title: 'За деньги', url: 'https://nextjs-boil-delta.vercel.app/за-деньги.mp3' },
+        { title: 'Не стыдно', url: 'https://nextjs-boil-delta.vercel.app/Не-стыдно.mp3' },
+      ]
+      },
+      {
+      title: 'ГЕРОИ В МУЗЫКЕ',
+      album: [
+        { title: 'Блокада Ленинграда', url: 'https://nextjs-boil-delta.vercel.app/tagmp3_Блокада-Ленинграда-(2).mp3' },
+        { title: 'Вагнера', url: 'https://nextjs-boil-delta.vercel.app/tagmp3_РД-Вагнера.mp3' },
+        { title: 'Стрелок', url: 'https://nextjs-boil-delta.vercel.app/tagmp3_стрелок.mp3' },
+        { title: 'Ну, здравствуй, мама!', url: 'https://nextjs-boil-delta.vercel.app/Ну,%20здравствуй,%20мама!.mp3' },
+        { title: 'Мать', url: 'https://nextjs-boil-delta.vercel.app/tagmp3_Русская-душа---мать.mp3' },
+        { title: 'Там, где маки лютуют', url: 'https://nextjs-boil-delta.vercel.app/Там, где маки лютуют.mp3' },
+        { title: 'Как заставить молчать', url: 'https://nextjs-boil-delta.vercel.app/3_Русская_Душа_Как_заставить_молчать.mp3' },
+        { title: 'Горит свеча', url: 'https://nextjs-boil-delta.vercel.app/tagmp3_Свеча-(2).mp3' },
+      ]
+
+      },
+      {
+        title: 'ЛИРИКА ДУШИ',
+        album: [
+          { title: 'Романс', url: 'https://nextjs-boil-delta.vercel.app/Русская%20душа%20-%20Романс%20.mp3' },
+          { title: 'Венчание', url: 'https://nextjs-boil-delta.vercel.app/Венчание%20(4).mp3' },
+          { title: 'Случайно встретились глазами', url: 'https://nextjs-boil-delta.vercel.app/tagmp3_Случайно-встретились-глазами.mp3' },
+          { title: 'Люди бывают разными', url: 'https://nextjs-boil-delta.vercel.app/tagmp3_Русская-душа-–-Одни-и-те-же-имена.mp3' },
+          { title: 'Брат', url: 'https://nextjs-boil-delta.vercel.app/tagmp3_Брат-версия.mp3' },
+          { title: 'Недописанный стих', url: 'https://nextjs-boil-delta.vercel.app/tagmp3_Русская_душа_Недописанный_стих_.mp3' },
+          { title: 'Испачканной карандашом', url: 'https://nextjs-boil-delta.vercel.app/tagmp3_Русская_душа_Испачканной_карандашом_.mp3' },
+          { title: 'Одни и те же имена', url: 'https://nextjs-boil-delta.vercel.app/tagmp3_Русская-душа-–-Одни-и-те-же-имена.mp3' },
+          { title: 'Пройдусь по парку', url: 'https://nextjs-boil-delta.vercel.app/tagmp3_Русская-душа---Пройдусь-по-парку.mp3' },
+        ]
+      },
+      {
+      title: 'ПОБЕДНЫЙ МАЙ',
+      album: [
+        { title: 'Слезы кончились', url: 'https://nextjs-boil-delta.vercel.app/Слезы%20кончились.mp3' },
+        { title: 'Не прячь, слезу мой друг', url: 'https://nextjs-boil-delta.vercel.app/Не прячь, мой друг слезу.mp3' },
+        { title: 'Там на обычном и завьюженном холме', url: 'https://nextjs-boil-delta.vercel.app/Там_на_обычном_и_завьюженном_холме.mp3' },
+        { title: 'Вечная память героям', url: 'https://nextjs-boil-delta.vercel.app/Вечная%20память%20героям!%20(2).mp3' },
+        { title: 'Вы слышите?', url: 'https://nextjs-boil-delta.vercel.app/cromulentarrangements461%20–%20Вы%20слышите_.mp3' },
+        { title: 'Уже не стало ветеранов', url: 'https://nextjs-boil-delta.vercel.app/Уже%20не%20стало%20ветеранов.mp3' },
+        { title: 'Мы часто о героях говорим', url: 'https://nextjs-boil-delta.vercel.app/Мы%20часто%20о%20героях%20говорим%20(2).mp3' },
+        { title: 'Война дошла до Сталинграда', url: 'https://nextjs-boil-delta.vercel.app/Война%20дошла%20до%20Сталинграда%20(2).mp3' },
+        { title: 'На выжженой земле', url: 'https://nextjs-boil-delta.vercel.app/На выжженной земле.mp3' },
+        { title: 'Девятый десяток', url: 'https://nextjs-boil-delta.vercel.app/Девятый_десяток_для_вечности_миг_1.mp3' },        
+      ]
+      },
+      {
+      title: 'ШАНСОНЬЕ',
+      album: [
+        { title: 'Путник', url: 'https://nextjs-boil-delta.vercel.app/tagmp3_Русская-душа---Путник.mp3' },
+              { date: '09.01.2024', titleNumber: '105', title: 'Ну что пришла', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Ну что пришла.mp3' },
+        { date: '09.01.2024', titleNumber: '106', title: 'Остановите земле', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Остановите земле .mp3' },
+        { date: '09.01.2024', titleNumber: '107', title: 'Бродяге', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Бродяга.mp3' },
+    { date: '09.01.2024', titleNumber: '108', title: 'Ну что застыл', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Ну что застыл.mp3' },
+    { date: '09.01.2024', titleNumber: '109', title: 'Налетает грусть', url: 'https://nextjs-boil-delta.vercel.app/Русская%20душа%20-%20Налетает%20грусть%20.mp3' },
+    { date: '09.01.2024', titleNumber: '110', title: 'Мой мир таков, каким он мне открылся', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Мой мир таков, каким он мне открылся .mp3' },
+    { date: '09.01.2024', titleNumber: '111', title: 'Плачу два счетчика', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Плачу два счетчика.mp3 '},
+    { date: '09.01.2024', titleNumber: '112', title: 'Про СВО', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Про СВО.mp3' },
+    { date: '09.01.2024', titleNumber: '113', title: 'Пять лет назад', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Пять лет назад.mp3' },
+    { date: '09.01.2024', titleNumber: '114', title: 'Русский язызк', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Русский язык .mp3' },
+    { date: '09.01.2024', titleNumber: '115', title: 'Скрипач', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Скрипач .mp3' },
+    { date: '09.01.2024', titleNumber: '116', title: 'Я же вам говорил', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Я же вам говорил .mp3' },
+    { date: '09.01.2024', titleNumber: '117', title: 'Я уже не спешу', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Я уже не спешу .mp3'},
+      ]
+      },
+      {
+     title: 'МОЯ РОССИЯ',
+      album: [
+        { title: 'Над Курском взрывы', url: 'https://nextjs-boil-delta.vercel.app/Над Курском взрывы.mp3' },
+        ]
+      }, 
+      {
+     title: 'ПЛЯШЕМ ПО-НАШЕМУ',
+      album: [
+        { date: '09.01.2024', titleNumber: '137', title: 'Читаю строки ветхого завета', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Читаю строки ветхого завета.mp3'},
+        { date: '09.01.2024', titleNumber: '138', title: 'Чеcть пацана', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Честь пацана.mp3'},
+        { date: '09.01.2024', titleNumber: '139', title: 'Пять лет я учился на инженера', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Пять лет учился я на инженера.mp3'},
+        { date: '09.01.2024', titleNumber: '140', title: 'Одесса', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Одесса.mp3'},
+        { date: '09.01.2024', titleNumber: '141', title: 'Новости смотрю и плачу Частушки', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Новости смотрю и плачу (частушки).mp3'},
+        { date: '09.01.2024', titleNumber: '142', title: 'Врач от Бога', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Врач от Бога.MP3'},
+        { date: '09.01.2024', titleNumber: '144', title: 'Приснился адвокату сон', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Приснился адвокату сон.mp3'},
+        { date: '09.01.2024', titleNumber: '145', title: 'Пришел домой', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Пришел домой.mp3'},
+        { date: '09.01.2024', titleNumber: '148', title: 'Я не ханжа', url: 'https://nextjs-boil-delta.vercel.app/Русская душа - Я не ханжа.MP3'},
+
+        ]
+      }
+      
+      ];
+
+    currentTrackIndex = -1;
+    let currentHighlightedElement = null;
+
+    function playTrack(albumIndex, trackIndex) {
+
+      if (currentHighlightedElement) {
+        currentHighlightedElement.classList.remove('highlight');
+    }
+
+
+      
+    const track = tracks[albumIndex].album[trackIndex];
+    currentTrackIndex = { albumIndex, trackIndex };
+    audioPlayer.src = track.url;
+    audioPlayer.play().catch(error => {
+        console.error("Ошибка воспроизведения:", error);
+    });
+
+     const albumTracksContainers = document.querySelectorAll('.album-tracks');
+    
+
+    let foundElement = null;
+    
+    albumTracksContainers.forEach(container => {
+        const trackRows = container.querySelectorAll('.track-row');
+        trackRows.forEach(row => {
+            const trackButton = row.querySelector('.local-track-button');
+            if (trackButton && trackButton.textContent === track.title) {
+                foundElement = row;
+            }
+        });
+    });
+
+    if (foundElement) {
+        foundElement.classList.add('highlight');
+        currentHighlightedElement = foundElement;
+
+        foundElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+
+}
+
+
+    const buttonsContainer = document.getElementById('buttons-container');
+    const audioPlayer = document.getElementById('audio-player');
+
+    function addToPlaylist(trackTitle) {
+      let current = localStorage.getItem('trek') || '';
+      let songs = current.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+
+      if (songs.includes(trackTitle)) {
+        alert(`Песня "${trackTitle}" уже есть в плейлист`);
+        return;
+      }
+
+      songs.unshift(trackTitle);
+      localStorage.setItem('trek', songs.join('\n'));
+      alert(`Песня "${trackTitle}" добавлена`);
+    }
+
+
+    function addToPlaylistAlbom(trackTitle) {
+      let current = localStorage.getItem('trekA') || '';
+      let songs = current.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+
+      if (songs.includes(trackTitle)) {
+        alert(`Альбом "${trackTitle}" уже есть`)
+        return;
+      }
+
+      songs.unshift(trackTitle)
+
+
+      localStorage.setItem('trekA', songs.join('\n'));
+      alert(`Альбом "${trackTitle}" добавлен`);
+    }
+
+    tracks.forEach(track => {
+      if (track.album) {
+        const albumTitle = document.createElement('div');
+        albumTitle.className = 'album-title';
+        albumTitle.textContent = track.title;
+        albumTitle.style.cursor = 'pointer';
+      
+        const albumTracks = document.createElement('div');
+        albumTracks.style.display = 'none'
+
+        
+        
+        albumTitle.onclick = () => {
+          const allAlbumTracks = document.querySelectorAll('.album-tracks');
+          allAlbumTracks.forEach(getTrack => {
+            if (albumTracks !== getTrack) {
+              getTrack.style.display = 'none';
+            }
+
+          });
+
+
+          albumTracks.style.display = (albumTracks.style.display === 'none') ? 'block' : 'none';
+        };
+        
+        track.album.forEach(song => {
+          const trackRow = document.createElement('div');
+          trackRow.className = 'track-row';
+
+          const addBtn = document.createElement('button');
+          addBtn.className = 'add-btn';
+          addBtn.textContent = '+';
+          addBtn.title = `Добавить "${track.title}" в плейлист`;
+          addBtn.setAttribute('aria-label', `Добавить ${song.title} в плейлист`);
+          addBtn.onclick = (event) => {
+             event.stopPropagation(); 
+             addToPlaylist(song.title);
+          };
+
+
+          const trackBtn = document.createElement('button');
+          trackBtn.className = 'local-track-button';
+          trackBtn.textContent = song.title;
+          trackBtn.title = `Воспроизвести ${song.title}`;
+          trackBtn.disabled = !song.url;
+          trackBtn.onclick = () => {
+    playTrack(tracks.indexOf(track), track.album.indexOf(song));
+};
+          
+          trackRow.appendChild(addBtn);
+          trackRow.appendChild(trackBtn);
+          albumTracks.appendChild(trackRow);
+        })
+
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add-btn-albom';
+        addBtn.textContent = '+';
+        addBtn.title = `Добавить "${track.title}" в плейлист`;
+        addBtn.setAttribute('aria-label', `Добавить ${track.title} в плейлист`);
+        addBtn.onclick = (event) => {
+             event.stopPropagation(); 
+             addToPlaylistAlbom(track.title);
+          };
+
+        albumTitle.appendChild(addBtn)
+    
+
+        albumTracks.className = 'album-tracks';
+        buttonsContainer.appendChild(albumTitle);
+        buttonsContainer.appendChild(albumTracks);
+      }
+    });
+
+    const searchInput = document.querySelector('.searchL input[type="text"]');
+const searchForm = document.querySelector('.searchL');
+
+searchForm.addEventListener('submit', (event) => {
+  event.preventDefault(); 
+  const query = searchInput.value.toLowerCase();
+
+  const albomToScrollTo = tracks.find(title1 => title1.title.toLowerCase().includes(query));
+  const verA = Array.from(buttonsContainer.children);
+
+  if (albomToScrollTo) {
+    const ElementA = verA.find(child => child.textContent.includes(albomToScrollTo.title));
+    if (ElementA) {
+      ElementA.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      ElementA.classList.add('highlight');
+      setTimeout(() => {
+        ElementA.classList.remove('highlight');
+      }, 2000);
+    }
+  } else {
+
+    let trackFound = false; 
+    tracks.forEach(titleTracks => {
+      const filteredAlbomTitle = titleTracks.album;
+      const FeAlbomTitle = filteredAlbomTitle.find(title12 => title12.title.toLowerCase().includes(query));
+
+      if (FeAlbomTitle) {
+        const albumElement = verA.find(child => child.textContent.includes(titleTracks.title));
+        if (albumElement) {
+          albumElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          get = albumElement.nextElementSibling
+
+     
+          const trackRow = Array.from(albumElement.nextElementSibling.children).find(row => row.textContent.includes(FeAlbomTitle.title));
+          if (trackRow) {
+  albumElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  trackRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  get.style.display = 'block';
+  
+  trackRow.classList.add('highlight');
+  setTimeout(() => {
+    trackRow.classList.remove('highlight'); 
+    trackRow.classList.add('fade-out'); 
+    setTimeout(() => {
+      trackRow.classList.remove('fade-out'); 
+    }, 500); 
+  }, 2000);
+}
+        }
+        trackFound = true; 
+      }
+    });
+  }
+});
+
+audioPlayer.addEventListener('ended', () => {
+     const { albumIndex, trackIndex } = currentTrackIndex;
+    const currentAlbum = tracks[albumIndex].album;
+    const nextTrackIndex = trackIndex + 1;
+
+    if (currentHighlightedElement) {
+        currentHighlightedElement.classList.remove('highlight');
+      let foundElement = null;
+    }
+  
+
+    if (nextTrackIndex < currentAlbum.length) {
+      playTrack(albumIndex, nextTrackIndex)
+    } else {
+      playTrack(albumIndex, 0)
+    }
+});
+
+
+  </script>
+</body>
