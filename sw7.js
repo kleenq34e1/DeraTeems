@@ -1,4 +1,4 @@
-const CACHE_NAME = 'music-player-cache-v11';
+const CACHE_NAME = 'music-player-cache-v12';
 const urlsToCache = [
 
   "https://nextjs-boilerplate-i6pd.vercel.app/Русская душа - Богеме Ивлеевой (5).mp3",
@@ -218,36 +218,51 @@ const urlsToCache = [
 ];
 
 
-async function cacheUrlsSequentially(cache, urls) {
-  for (const url of urls) {
-    try {
-      await cache.add(url);
-      console.log(`Успешно закэширован: ${url}`);
-    } catch (error) {
-      console.error(`Ошибка при кэшировании ${url}:`, error);
-    }
+async function cacheUrlsInBatches(cache, urls, batchSize = 10) {
+  const batches = [];
+  for (let i = 0; i < urls.length; i += batchSize) {
+    batches.push(urls.slice(i, i + batchSize));
   }
+
+  let cachedCount = 0;
+  for (const batch of batches) {
+    await Promise.all(
+      batch.map(async (url) => {
+        try {
+          await cache.add(url);
+          cachedCount++;
+          console.log(`Успешно закэширован (${cachedCount}/${urls.length}): ${url}`);
+        } catch (error) {
+          console.error(`Ошибка при кэшировании ${url}:`, error);
+        }
+      })
+    );
+  }
+  console.log(`Кэширование завершено: ${cachedCount} из ${urls.length} файлов.`);
 }
 
 self.addEventListener('install', (event) => {
   console.log('[SW] Install');
   event.waitUntil(
-    caches.open(CACHE_NAME).then(async (cache) => {
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      
+
       await cache.addAll([
         "/DeraTeems/izbran.html",
         "/DeraTeems/index.html",
         "/DeraTeems/cash.html",
         "/DeraTeems/script.js",
       ]);
-      await cacheUrlsSequentially(cache, urlsToCache.filter(url => !url.startsWith('/Obmen/')));
-    }).then(() => {
+      
+
+      const filteredUrls = urlsToCache.filter(url => !url.startsWith('/Obmen/'));
+      await cacheUrlsInBatches(cache, filteredUrls, 10); 
+      
       return self.skipWaiting();
-    })
+    })()
   );
 });
-
-
-
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
@@ -255,19 +270,18 @@ self.addEventListener('fetch', (event) => {
       .then((response) => {
         if (response) {
           console.log('Ресурс найден в кэше:', event.request.url);
-          return response;  
+          return response;
         }
-        return fetch(event.request);  
+        return fetch(event.request);
       })
   );
 });
 
-
-self.addEventListener('activate', event => {
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(cacheNames => {
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.map(cacheName => {
+        cacheNames.map((cacheName) => {
           if (cacheName !== CACHE_NAME) {
             return caches.delete(cacheName);
           }
